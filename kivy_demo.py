@@ -63,8 +63,7 @@ class Home_Page(GridLayout):
 
 
 	def take_attendance(self, instance):
-		global usernames
-		global embeddings
+		global usernames, embeddings
 		embeddings, usernames = readAllBlobData()
 		UI_interface.screen_manager.current = "Attendance"
 
@@ -82,7 +81,6 @@ class Attendance_Page(GridLayout):
 	
 	def __init__(self, **kwargs):
 		super().__init__(**kwargs)
-		print(usernames)
 		self.output_path = 'Output/'
 		self.flag = 0
 		self.cols = 2
