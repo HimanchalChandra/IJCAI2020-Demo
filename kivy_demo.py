@@ -30,6 +30,8 @@ import cv2
  
 kivy.require("1.11.1")
 
+global usernames
+global embeddings
 
 class Home_Page(GridLayout):
 	def __init__(self, **kwargs):
@@ -61,6 +63,9 @@ class Home_Page(GridLayout):
 
 
 	def take_attendance(self, instance):
+		global usernames
+		global embeddings
+		embeddings, usernames = readAllBlobData()
 		UI_interface.screen_manager.current = "Attendance"
 
 	def show_attendance(self, instance):
@@ -77,6 +82,7 @@ class Attendance_Page(GridLayout):
 	
 	def __init__(self, **kwargs):
 		super().__init__(**kwargs)
+		print(usernames)
 		self.output_path = 'Output/'
 		self.flag = 0
 		self.cols = 2
@@ -130,7 +136,6 @@ class Attendance_Page(GridLayout):
 
 
 	def recognize(self, instance):
-
 		ts = datetime.datetime.now()
 		img_name = "{}.jpg".format(ts.strftime("%Y-%m-%d_%H-%M-%S"))
 		img_path = self.output_path + img_name
@@ -142,10 +147,10 @@ class Attendance_Page(GridLayout):
 			ones_matrix = np.ones((len(usernames), 1))
 			embedding_matrix = np.matmul(ones_matrix, embedding.detach().numpy())
 			distances = calc_distance(embedding_matrix, embeddings)
-			if (distances[np.argmax(distances, axis = 0)] < 1.0000):
-				print(usernames[np.argmax(distances, axis = 0)] + ' Marked')
+			if (distances[np.argmin(distances)] < 1.0000):
+				print(usernames[np.argmin(distances)] + ' Marked')
 				self.button_layout.remove_widget(self.label)
-				self.label = Label(text=usernames[np.argmax(distances, axis = 0)] + ' Marked', font_size = 38, color = [255, 255, 255, 1])
+				self.label = Label(text=usernames[np.argmin(distances)] + ' Marked', font_size = 38, color = [255, 255, 255, 1])
 				self.button_layout.add_widget(self.label)
 			else:
 				self.button_layout.remove_widget(self.label)
