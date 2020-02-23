@@ -20,12 +20,27 @@ def extract_face(image):
     return resized_face_crop
 
 
+def extract_all_faces(image):
+
+    faces = detector.detect_faces(image)
+    thickness = 2
+    color = (0, 255, 0)
+    for face in faces:
+        box = face['box']
+        start_pt = (box[0], box[1] + box[3])
+        end_pt = (box[0] + box[2], box[1])
+        image = cv2.rectangle(image, start_pt, end_pt, color, thickness)
+
+    return image
+
+
 def check_img(img_path):
 
     image = cv2.imread(img_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     face = detector.detect_faces(image)
     faces_num = len(face)
+    print(faces_num)
     check = False
     if faces_num == 1:
         box = face[0]['box']
