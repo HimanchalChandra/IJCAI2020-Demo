@@ -7,7 +7,7 @@ ABSTRACT
 Automated Attendance Management is essential in educational institutions for efficient
 monitoring of students, especially in countries with a high student-teacher ratio. The current
 methods include RFID and Biometric based methods for automated attendance recording.
-However, these methods come with their own security and hygiene issues respectively. The
+However, these methods come with their security and hygiene issues respectively. The
 current state of the art Face Recognition technology has been proven to be highly secure and
 efficient. This paper focuses on an automated and interactive attendance management
 application for mobile devices. The application provides four top-level services: real-time
@@ -22,6 +22,10 @@ database. Face embeddings are generated and stored in a database whenever a new 
 registered. The application can easily be compiled to run on various platforms. Finally, we
 implement an interactive feature for analysis and visualization of each student’s attendance
 record.
+
+
+.. image:: https://github.com/ankursikarwar/IJCAI2020-Demo/blob/master/UI.png
+
 
 REFERENCES
 ==========
