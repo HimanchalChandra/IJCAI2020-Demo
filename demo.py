@@ -76,11 +76,11 @@ class Home_Page(GridLayout):
 		global usernames, embeddings
 		embeddings, usernames = readAllBlobData()
 
-		show_attendance_student = Show_Attendance_Page()
-		screen = Screen(name='Show_Attendance')
-		screen.add_widget(show_attendance_student)
-		UI_interface.screen_manager.switch_to(screen)
-		# UI_interface.screen_manager.current = "Show_Attendance"
+		# show_attendance_student = Show_Attendance_Page()
+		# screen = Screen(name='Show_Attendance')
+		# screen.add_widget(show_attendance_student)
+		# UI_interface.screen_manager.switch_to(screen)
+		UI_interface.screen_manager.current = "Show_Attendance"
 
 	def add_student(self, instance):
 		UI_interface.screen_manager.current = "Add_Student"
