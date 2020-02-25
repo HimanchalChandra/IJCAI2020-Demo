@@ -2,7 +2,7 @@ AI-AMA: Automated and Interactive Attendance Management Application
 ###################################################################
 
 ABSTRACT
-########
+========
 
 Automated Attendance Management is essential in educational institutions for efficient
 monitoring of students, especially in countries with a high student-teacher ratio. The current
@@ -24,13 +24,17 @@ implement an interactive feature for analysis and visualization of each studentâ
 record.
 
 REFERENCES
-##########
+==========
 
 .. [ZHANG2016] Zhang, K., Zhang, Z., Li, Z., and Qiao, Y. (2016). Joint face detection and alignment using multitask cascaded convolutional networks. IEEE Signal Processing Letters, 23(10):1499â€“1503.
 
-.. [CAO2018] Q. Cao, L. Shen, W. Xie, O. M. Parkhi, A. Zisserman (2018). VGGFace2: A dataset for recognising face across pose and age. nternational Conference on Automatic Face and Gesture Recognition, 2018.
+.. [CAO2018] Q. Cao, L. Shen, W. Xie, O. M. Parkhi, A. Zisserman (2018). VGGFace2: A dataset for recognising face across pose and age. International Conference on Automatic Face and Gesture Recognition, 2018.
+
+.. [SCHROFF2015] Florian Schroff, Dmitry Kalenichenko, James Philbin (2015). FaceNet: A Unified Embedding for Face Recognition and Clustering. IEEE Computer Society Conference on Computer Vision and Pattern Recognition, 2015.
+
+
 
 LICENSE
-#######
+=======
 
 This project is licensed under the MIT License.
