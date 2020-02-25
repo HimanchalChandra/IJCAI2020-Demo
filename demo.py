@@ -1,4 +1,4 @@
-from db_utils import *
+from Utils.db_utils import *
 from Utils.utils import *
 
 from kivy.config import Config
@@ -32,6 +32,11 @@ kivy.require("1.11.1")
 
 global usernames
 global embeddings
+
+global attendance 
+
+attendance = dict()
+
 
 class Home_Page(GridLayout):
 	def __init__(self, **kwargs):
@@ -68,7 +73,14 @@ class Home_Page(GridLayout):
 		UI_interface.screen_manager.current = "Attendance"
 
 	def show_attendance(self, instance):
-		return None
+		global usernames, embeddings
+		embeddings, usernames = readAllBlobData()
+
+		show_attendance_student = Show_Attendance_Page()
+		screen = Screen(name='Show_Attendance')
+		screen.add_widget(show_attendance_student)
+		UI_interface.screen_manager.switch_to(screen)
+		# UI_interface.screen_manager.current = "Show_Attendance"
 
 	def add_student(self, instance):
 		UI_interface.screen_manager.current = "Add_Student"
@@ -150,6 +162,7 @@ class Attendance_Page(GridLayout):
 				self.button_layout.remove_widget(self.label)
 				self.label = Label(text=usernames[np.argmin(distances)] + ' Marked', font_size = 38, color = [255, 255, 255, 1])
 				self.button_layout.add_widget(self.label)
+				attendance[usernames[np.argmin(distances)]] = "Present"
 			else:
 				self.button_layout.remove_widget(self.label)
 				self.label = Label(text = 'User Not Registered', font_size = 38, color = [255, 255, 255, 1])
@@ -262,7 +275,37 @@ class Add_Student(GridLayout):
 
 
 
-class UI(App):
+class Show_Attendance_Page(GridLayout):
+	
+	def __init__(self, **kwargs):
+		super().__init__(**kwargs)
+		self.flag = 0
+		self.cols = 2
+		self.padding = [100, 100, 100, 100]
+		self.spacing = [20, 20]
+
+		self.attendance_list = GridLayout(cols = 2, rows = 42, spacing = [20, 20])
+		for key in attendance.keys():
+			self.attendance_list.add_widget(Label(text = key, font_size = 20, color = [255, 255, 255, 1]))
+			self.attendance_list.add_widget(Label(text = attendance[key], font_size = 20, color = [255, 255, 255, 1]))
+
+		self.add_widget(self.attendance_list)
+
+		self.back = Button(text='GO BACK', font_size = 30, italic = True, background_color = [255, 1, 1, 1])
+		self.back.bind(on_press = self.goback)
+		self.add_widget(self.back)
+
+
+	def goback(self, instance):
+
+		self.remove_widget(self.back)
+		self.remove_widget(self.attendance_list)
+		self.__init__()
+		UI_interface.screen_manager.current = "Home"
+
+
+
+class AIAMS(App):
 
 	def build(self):
 		self.screen_manager = ScreenManager()
@@ -282,10 +325,20 @@ class UI(App):
 		screen.add_widget(self.add_student)
 		self.screen_manager.add_widget(screen)
 
+		self.show_attendance_student = Show_Attendance_Page()
+		screen = Screen(name='Show_Attendance')
+		screen.add_widget(self.show_attendance_student)
+		self.screen_manager.add_widget(screen)		
+
 		return self.screen_manager
 
 
 if __name__ == "__main__":
 	embeddings, usernames = readAllBlobData()
-	UI_interface = UI()
+	
+	for username in usernames:
+		if username not in attendance.keys():
+			attendance[username] = 'Absent' 
+	
+	UI_interface = AIAMS()
 	UI_interface.run()
