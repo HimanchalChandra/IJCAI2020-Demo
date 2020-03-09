@@ -24,16 +24,21 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 
 from kivy.graphics import Color, Rectangle
 
+import sys
 import datetime
 import cv2
-
  
 kivy.require("1.11.1")
+
 
 global usernames
 global embeddings
 
 global attendance 
+global camera_index
+global show_attendance_obj
+
+camera_index = 2
 
 attendance = dict()
 
@@ -74,8 +79,10 @@ class Home_Page(GridLayout):
 
 	def show_attendance(self, instance):
 		global usernames, embeddings
+		global show_attendance_obj
 		embeddings, usernames = readAllBlobData()
 
+		show_attendance_obj.show()
 		UI_interface.screen_manager.current = "Show_Attendance"
 
 	def add_student(self, instance):
@@ -103,6 +110,7 @@ class Attendance_Page(GridLayout):
 
 
 	def start(self, instance):
+		global camera_index
 		self.flag = 1
 		self.img=Image()
 		self.layout = BoxLayout()
@@ -126,12 +134,11 @@ class Attendance_Page(GridLayout):
 		
 		self.add_widget(self.button_layout)
 
-		self.capture = cv2.VideoCapture(3)
+		self.capture = cv2.VideoCapture(camera_index)
 		self.event = Clock.schedule_interval(self.update, 1.0/33.0)
 
 
 	def update(self, instance):
-
 		_, self.frame = self.capture.read()
 		self.frame = extract_all_faces(self.frame)
 		buf1 = cv2.flip(self.frame, 0)
@@ -197,6 +204,7 @@ class Add_Student(GridLayout):
 		self.add_widget(self.back)
 
 	def start(self, instance):
+		global camera_index
 		self.flag = 1
 		self.img=Image()
 		self.layout = BoxLayout()
@@ -223,7 +231,7 @@ class Add_Student(GridLayout):
 		
 		self.add_widget(self.button_layout)
 
-		self.capture = cv2.VideoCapture(3)
+		self.capture = cv2.VideoCapture(camera_index)
 		self.event = Clock.schedule_interval(self.update, 1.0/33.0)
 
 
@@ -238,7 +246,6 @@ class Add_Student(GridLayout):
 
 
 	def add(self, instance):
-
 		if len(self.name.text) != 0:
 			ts = datetime.datetime.now()
 			img_name = "{}.jpg".format(ts.strftime("%Y-%m-%d_%H-%M-%S"))
@@ -261,12 +268,20 @@ class Add_Student(GridLayout):
 			self.button_layout.add_widget(self.label)
 
 	def goback(self, instance):
+		global usernames, embeddings
+
 		if self.flag == 1:
 			self.event.cancel()
 			self.capture.release()
 			self.remove_widget(self.layout)
 			self.remove_widget(self.button_layout)
 			self.__init__()
+
+			embeddings, usernames = readAllBlobData()
+			for username in usernames:
+				if username not in attendance.keys():
+					attendance[username] = 'Absent' 
+		print(attendance)
 		UI_interface.screen_manager.current = "Home"
 
 
@@ -280,6 +295,8 @@ class Show_Attendance_Page(GridLayout):
 		self.padding = [100, 100, 100, 100]
 		self.spacing = [20, 20]
 
+
+	def show(self):
 		self.attendance_list = GridLayout(cols = 2, rows = 42, spacing = [20, 20])
 		for key in attendance.keys():
 			self.attendance_list.add_widget(Label(text = key, font_size = 20, color = [255, 255, 255, 1]))
@@ -291,12 +308,10 @@ class Show_Attendance_Page(GridLayout):
 		self.back.bind(on_press = self.goback)
 		self.add_widget(self.back)
 
-
 	def goback(self, instance):
 
 		self.remove_widget(self.back)
 		self.remove_widget(self.attendance_list)
-		self.__init__()
 		UI_interface.screen_manager.current = "Home"
 
 
@@ -304,6 +319,7 @@ class Show_Attendance_Page(GridLayout):
 class AIAMS(App):
 
 	def build(self):
+		global show_attendance_obj
 		self.screen_manager = ScreenManager()
 
 		self.home_page = Home_Page()
@@ -321,9 +337,9 @@ class AIAMS(App):
 		screen.add_widget(self.add_student)
 		self.screen_manager.add_widget(screen)
 
-		self.show_attendance_student = Show_Attendance_Page()
+		show_attendance_obj = Show_Attendance_Page()
 		screen = Screen(name='Show_Attendance')
-		screen.add_widget(self.show_attendance_student)
+		screen.add_widget(show_attendance_obj)
 		self.screen_manager.add_widget(screen)		
 
 		return self.screen_manager

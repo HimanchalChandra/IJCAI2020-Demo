@@ -21,7 +21,6 @@ def extract_face(image):
 
 
 def extract_all_faces(image):
-
     faces = detector.detect_faces(image)
     thickness = 2
     color = (0, 255, 0)
