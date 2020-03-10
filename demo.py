@@ -158,23 +158,28 @@ class Attendance_Page(GridLayout):
 		print("[INFO] saved {}".format(img_name))
 		embedding, flag = generate_embedding(img_path)
 
-		if flag == 1:
-			ones_matrix = np.ones((len(usernames), 1))
-			embedding_matrix = np.matmul(ones_matrix, embedding.detach().numpy())
-			distances = calc_distance(embedding_matrix, embeddings)
-			if (distances[np.argmin(distances)] < 1.0000):
-				print(usernames[np.argmin(distances)] + ' Marked')
-				self.button_layout.remove_widget(self.label)
-				self.label = Label(text=usernames[np.argmin(distances)] + ' Marked', font_size = 38, color = [255, 255, 255, 1])
-				self.button_layout.add_widget(self.label)
-				attendance[usernames[np.argmin(distances)]] = "Present"
+		if embeddings is not None:
+			if flag == 1:
+				ones_matrix = np.ones((len(usernames), 1))
+				embedding_matrix = np.matmul(ones_matrix, embedding.detach().numpy())
+				distances = calc_distance(embedding_matrix, embeddings)
+				if (distances[np.argmin(distances)] < 1.0000):
+					print(usernames[np.argmin(distances)] + ' Marked')
+					self.button_layout.remove_widget(self.label)
+					self.label = Label(text=usernames[np.argmin(distances)] + ' Marked', font_size = 38, color = [255, 255, 255, 1])
+					self.button_layout.add_widget(self.label)
+					attendance[usernames[np.argmin(distances)]] = "Present"
+				else:
+					self.button_layout.remove_widget(self.label)
+					self.label = Label(text = 'User Not Registered', font_size = 38, color = [255, 255, 255, 1])
+					self.button_layout.add_widget(self.label)
 			else:
 				self.button_layout.remove_widget(self.label)
-				self.label = Label(text = 'User Not Registered', font_size = 38, color = [255, 255, 255, 1])
+				self.label = Label(text='Zero/Muliple Faces Detected', font_size = 38, color = [255, 255, 255, 1])
 				self.button_layout.add_widget(self.label)
 		else:
 			self.button_layout.remove_widget(self.label)
-			self.label = Label(text='Zero/Muliple Faces Detected', font_size = 38, color = [255, 255, 255, 1])
+			self.label = Label(text='No Registered Users', font_size = 38, color = [255, 255, 255, 1])
 			self.button_layout.add_widget(self.label)
 
 
