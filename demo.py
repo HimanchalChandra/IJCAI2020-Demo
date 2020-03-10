@@ -89,7 +89,9 @@ class Home_Page(GridLayout):
 		UI_interface.screen_manager.current = "Add_Student"
 
 	def remove_student(self, instance):
-		return None
+		global remove_student_obj
+		remove_student_obj.show()
+		UI_interface.screen_manager.current = "Remove_Student"
 
 
 class Attendance_Page(GridLayout):
@@ -315,11 +317,61 @@ class Show_Attendance_Page(GridLayout):
 		UI_interface.screen_manager.current = "Home"
 
 
+class Remove_Student_Page(GridLayout):
+	
+	def __init__(self, **kwargs):
+		super().__init__(**kwargs)
+		self.flag = 0
+		self.cols = 2
+		self.padding = [100, 100, 100, 100]
+		self.spacing = [20, 20]
+
+
+	def show(self):
+		self.name = TextInput(multiline = False, size_hint = (.2, None), height = 40)
+		self.remove = Button(text='REMOVE USER', font_size = 30, italic = True, background_color = [255, 1, 1, 1])
+		self.remove.bind(on_press = self.remove_student)
+		self.back = Button(text='GO BACK', font_size = 30, italic = True, background_color = [255, 1, 1, 1])
+		self.back.bind(on_press = self.goback)
+		self.buttons = GridLayout(cols = 1, spacing = [20, 20])
+		self.buttons.add_widget(self.name)
+		self.buttons.add_widget(self.remove)
+		self.buttons.add_widget(self.back)
+		self.add_widget(self.buttons)
+
+		self.attendance_list = GridLayout(cols = 2, rows = 42, spacing = [20, 20])
+		for key in attendance.keys():
+			self.attendance_list.add_widget(Label(text = key, font_size = 20, color = [255, 255, 255, 1]))
+			self.attendance_list.add_widget(Label(text = attendance[key], font_size = 20, color = [255, 255, 255, 1]))
+
+		self.add_widget(self.attendance_list)
+
+	def remove_student(self, instance):
+		if len(self.name.text) != 0:
+			deleteBlob(self.name.text)
+			self.remove_widget(self.attendance_list)
+			if self.name.text in attendance:
+				del attendance[self.name.text]
+			print(attendance)
+			self.attendance_list = GridLayout(cols = 2, rows = 42, spacing = [20, 20])
+			for key in attendance.keys():
+				self.attendance_list.add_widget(Label(text = key, font_size = 20, color = [255, 255, 255, 1]))
+				self.attendance_list.add_widget(Label(text = attendance[key], font_size = 20, color = [255, 255, 255, 1]))
+
+			self.add_widget(self.attendance_list)
+
+
+	def goback(self, instance):
+		self.remove_widget(self.buttons)
+		self.remove_widget(self.attendance_list)
+		UI_interface.screen_manager.current = "Home"
+
+
 
 class AIAMS(App):
 
 	def build(self):
-		global show_attendance_obj
+		global show_attendance_obj, remove_student_obj
 		self.screen_manager = ScreenManager()
 
 		self.home_page = Home_Page()
@@ -340,7 +392,12 @@ class AIAMS(App):
 		show_attendance_obj = Show_Attendance_Page()
 		screen = Screen(name='Show_Attendance')
 		screen.add_widget(show_attendance_obj)
-		self.screen_manager.add_widget(screen)		
+		self.screen_manager.add_widget(screen)	
+
+		remove_student_obj = Remove_Student_Page()
+		screen = Screen(name='Remove_Student')
+		screen.add_widget(remove_student_obj)
+		self.screen_manager.add_widget(screen)	
 
 		return self.screen_manager
 
