@@ -38,7 +38,7 @@ global attendance
 global camera_index
 global show_attendance_obj
 
-camera_index = 2
+camera_index = 0
 
 attendance = dict()
 
