@@ -22,75 +22,71 @@ euclidean distances from other face embeddings.
 <br>
 <br>
 
-## INSTALLATIONS
+## Installation 
 
-1.Logged into your Ubuntu server as a sudo non-root user, first update and upgrade your system to ensure that your shipped version of Python 3 is up-to-date. 
-
-```
-sudo apt update -y && sudo apt full-upgrade -y
-```
-
-2. Check which version of Python 3 is installed by typing: 
-
-```
-python3 -V
-```
-You’ll receive output similar to the following, depending on when you have updated your system.
-
-```
-Python 3.6.9
-```
-
-3. Virtual environments enable you to have an isolated space on your server for Python projects. We’ll use venv, part of the standard Python 3 library, which we can install by typing:
+1. Firstly, install venv which is a part of the standard Python3 library:
 
 ```
 sudo apt install -y python3-venv
 ```
-4. Create a project folder
+2. Create a project folder
 
 
 ```
 mkdir attendance_interface
 cd attendance_interface
 ```
-5. Initialize virtual environment 
+3. Initialize virtual environment 
 
 ```
 python3 -m venv my_env
 ```
-6. Activate the virtual environment
+4. Activate the virtual environment
 
 ```
 source my_env/bin/activate
 ```
 
-7. Clone the Repo
+5. Clone the Repo
 
 ```
 (my_env) git clone https://github.com/ankursikarwar/IJCAI2020-Demo.git
 ```
-8. Navigate to the sub-folder
+
+6. Navigate to the sub-folder
 
 ```
 (my_env) cd IJCAI2020-Demo
 ```
 
-9. Install the dependencies
+7. Install the dependencies
 
 ```
 (my_env) pip install -r requirements.txt
 ```
 
-10. Starting the Application
+8. (Optional) User may need to change camera device index based on their webcam configuration. Default camera index is 0. (Check line 41 in demo.py)
+
+
+9. Starting the Application
 
 
 ```
 (my_env) python demo.py
 ```
+## References
+
+1. Zhang, K., Zhang, Z., Li, Z., and Qiao, Y. (2016). Joint face detection and alignment using multitask cascaded convolutional networks. IEEE Signal Processing Letters, 23(10):1499–1503.
+
+2. Q. Cao, L. Shen, W. Xie, O. M. Parkhi, A. Zisserman (2018). VGGFace2: A dataset for recognising face across pose and age. International Conference on Automatic Face and Gesture Recognition, 2018.
+
+3. Florian Schroff, Dmitry Kalenichenko, James Philbin (2015). FaceNet: A Unified Embedding for Face Recognition and Clustering. IEEE Computer Society Conference on Computer Vision and Pattern Recognition, 2015.
+
+4. Christian Szegedy, Sergey Ioffe, Vincent Vanhoucke and Alex Alemi (2016). Inception-v4, Inception-ResNet and the Impact
+of Residual Connections on Learning. Computer Vision and Pattern Recognition.
 
 
-
-## LICENSE
+## License
 
 
 This project is licensed under the MIT License.
